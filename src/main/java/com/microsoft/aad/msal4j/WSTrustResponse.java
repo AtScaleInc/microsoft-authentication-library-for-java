@@ -194,8 +194,14 @@ class WSTrustResponse {
         StringBuilder resultBuilder = new StringBuilder();
         NodeList children = node.getChildNodes();
         try {
-            Transformer transformer = TransformerFactory.newInstance()
-                    .newTransformer();
+            // Temporary workaround due to a bug if the saxon transformer factory is registered as the default parser
+            // This forces the use of the default jvm's Transformer (only works in jdk 9+)
+            // https://github.com/AzureAD/microsoft-authentication-library-for-java/issues/451
+            // Transformer transformer = TransformerFactory.newInstance()
+            //        .newTransformer();
+            Transformer transformer = TransformerFactory.newDefaultInstance()
+                .newTransformer();
+
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,
                     "yes");
 
